@@ -1,0 +1,9 @@
+.github
+dist
+node_modules
+public
+.env
+.env.*
+/types/
+*.config.js
+*.min.js
