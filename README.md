@@ -52,9 +52,6 @@ pnpm dev              # 启动开发服务器
 
 ```bash
 pnpm build            # 生产构建
-pnpm build:analyze    # 构建并分析包大小
-pnpm build:profile    # 构建并分析性能
-pnpm build:gzip       # 构建并启用 gzip 压缩
 pnpm preview          # 预览生产构建
 ```
 

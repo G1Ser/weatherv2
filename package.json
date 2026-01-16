@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "preview": "vue-cli-service serve --mode production",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "core-js": "^3.8.3",
@@ -49,7 +51,6 @@
     "ts-jest": "^27.0.4",
     "typescript": "~4.5.5",
     "vue-template-compiler": "^2.6.14",
-    "webpack-bundle-analyzer": "^5.1.1",
-    "webpackbar": "^7.0.0"
+    "webpack-bundle-analyzer": "^5.1.1"
   }
 }
