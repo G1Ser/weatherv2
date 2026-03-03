@@ -1,1 +1,73 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'Consolas';
+  src: url('assets/fonts/consolas.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'LXGW';
+  src: url('assets/fonts/lxgwscreen.woff2') format('woff2');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Consolas', 'LXGW';
+  /* Allow explicit component overrides for scrollbar by not applying it blindly globally */
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+}
+
+html,
+body {
+  /* Provide fallback global invisible scrollbar config so page body doesn't trigger scrollbars */
+  &::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+}
+
+html,
+body {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+:root {
+  --bg-color: #0f172a;
+  --surface-color: rgba(30, 41, 59, 0.6);
+  --surface-hover: rgba(51, 65, 85, 0.8);
+  --text-color: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-color: #22c55e;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  --glass-backdrop: blur(12px);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
+  --transition: all 0.3s ease;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.glass-card {
+  background: var(--surface-color);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--surface-hover);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
