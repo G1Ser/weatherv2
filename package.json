@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ng serve",
-    "build": "ng build",
-    "preview": "ng build --watch --configuration development"
+    "build": "ng build --base-href /",
+    "preview": "ng build && npx serve ./dist/weatherv2/browser"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
