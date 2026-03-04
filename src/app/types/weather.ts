@@ -36,10 +36,6 @@ export interface IndexData {
   detail: string;
 }
 
-export interface Alert {
-  // Define alert structure if needed
-}
-
 export interface ForecastDaily {
   text_day: string;
   text_night: string;
@@ -78,7 +74,6 @@ export interface WeatherData {
   location: WeatherLocation;
   now: CurrentWeather;
   indexes?: IndexData[];
-  alerts?: Alert[];
   forecasts: ForecastDaily[];
   forecast_hours: ForecastHourly[];
 }

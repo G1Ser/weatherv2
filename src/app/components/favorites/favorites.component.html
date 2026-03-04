@@ -1,0 +1,85 @@
+<!-- ===== 桌面端：顶部横向滚动收藏条 ===== -->
+<div class="fav-bar desktop-only">
+  <div class="fav-bar-inner">
+    @for (city of cities(); track city.id) {
+      <button
+        class="city-card"
+        [class.active]="activeId() === city.id"
+        (click)="selectCity(city)"
+        [attr.title]="city.name"
+      >
+        <div class="city-card-top">
+          <span class="city-icon">{{ city.icon }}</span>
+          <span class="city-temp">{{ city.temp }}°</span>
+        </div>
+        <div class="city-name">{{ city.name }}</div>
+        <div class="city-meta">
+          <span class="city-text">{{ city.text }}</span>
+          @if (city.aqi) {
+            <span class="city-aqi" [style.color]="aqiLevel(city.aqi).color">
+              {{ aqiLevel(city.aqi).label }}
+            </span>
+          }
+        </div>
+        <div class="city-range">{{ city.low }}° / {{ city.high }}°</div>
+      </button>
+    }
+  </div>
+</div>
+
+<!-- ===== 移动端：底部抽屉 sheet ===== -->
+<div class="mobile-only">
+  <!-- 收藏按钮触发器 -->
+  <button class="fav-trigger" (click)="toggleSheet()">
+    <span class="fav-trigger-icon">{{ sheetOpen() ? '✕' : '⭐' }}</span>
+    <span class="fav-trigger-label">{{ sheetOpen() ? '关闭' : '收藏城市' }}</span>
+    <span class="fav-count">{{ cities().length }}</span>
+  </button>
+
+  <!-- 遮罩 -->
+  @if (sheetOpen()) {
+    <div
+      class="sheet-backdrop"
+      role="button"
+      tabindex="-1"
+      (click)="toggleSheet()"
+      (keydown.enter)="toggleSheet()"
+      aria-label="关闭收藏夹"
+    ></div>
+  }
+
+  <!-- Drawer sheet -->
+  <div class="fav-sheet" [class.open]="sheetOpen()">
+    <button class="sheet-handle" (click)="toggleSheet()">
+      <div class="handle-bar"></div>
+    </button>
+    <div class="sheet-header">
+      <h3>收藏的城市</h3>
+      <span class="sheet-count">{{ cities().length }} 个城市</span>
+    </div>
+    <div class="sheet-list">
+      @for (city of cities(); track city.id) {
+        <button
+          class="sheet-city-row"
+          [class.active]="activeId() === city.id"
+          (click)="selectCity(city); toggleSheet()"
+        >
+          <span class="row-icon">{{ city.icon }}</span>
+          <div class="row-info">
+            <span class="row-name">{{ city.name }}</span>
+            <span class="row-country">{{ city.country }}</span>
+          </div>
+          <div class="row-right">
+            <span class="row-temp">{{ city.temp }}°</span>
+            <span class="row-text">{{ city.text }}</span>
+            @if (city.aqi) {
+              <span class="row-aqi" [style.color]="aqiLevel(city.aqi).color">
+                AQI {{ city.aqi }}
+              </span>
+            }
+          </div>
+        </button>
+      }
+    </div>
+  </div>
+</div>

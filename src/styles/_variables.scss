@@ -1,14 +1,14 @@
 // ── Design tokens ────────────────────────────────────────────
-$glass-bg:      rgba(255, 255, 255, 0.08);
-$glass-border:  rgba(255, 255, 255, 0.14);
-$glass-blur:    16px;
-$radius-lg:     20px;
-$radius-md:     14px;
+$glass-bg: rgba(255, 255, 255, 0.08);
+$glass-border: rgba(255, 255, 255, 0.14);
+$glass-blur: 16px;
+$radius-lg: 20px;
+$radius-md: 14px;
 
-$text-primary:  #ffffff;
-$text-muted:    rgba(255, 255, 255, 0.55);
-$text-sub:      rgba(255, 255, 255, 0.75);
-$accent-blue:   #60a5fa;
+$text-primary: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.55);
+$text-sub: rgba(255, 255, 255, 0.75);
+$accent-blue: #60a5fa;
 $accent-orange: #f97316;
 
 @mixin glass {

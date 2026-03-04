@@ -1,0 +1,73 @@
+@if (error()) {
+  <div class="status-screen">
+    <span class="status-icon">⚠️</span>
+    <span>加载数据出错: {{ error() }}</span>
+  </div>
+} @else if (!weatherData()) {
+  <div class="status-screen">
+    <div class="loading-spinner"></div>
+    <span>加载中...</span>
+  </div>
+} @else {
+  <!-- ===== 固定在顶部的导航区 ===== -->
+  <div class="sticky-top-nav">
+    <!-- ===== Header ===== -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            #searchInput
+            type="text"
+            placeholder="搜索城市..."
+            class="glass-input"
+            id="city-search"
+            (keyup.enter)="onSearch(searchInput.value)"
+          />
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="location-badge"> 📍 {{ weatherData()!.location.name }} </span>
+        <button class="fav-heart-btn" [class.is-fav]="isCurrentFav()" (click)="toggleCurrentFav()">
+          <span class="heart-icon">❤️</span>
+        </button>
+        <button class="theme-toggle" (click)="toggleTheme()">
+          {{ isDarkTheme() ? '🌙' : '☀️' }}
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== 收藏夹 ===== -->
+    <app-favorites [activeId]="activeFavId()" (citySelected)="onFavCitySelected($event)" />
+  </div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="grid-layout">
+    <aside class="left-col">
+      <app-current-weather
+        class="top-card"
+        [weather]="weatherData()!.now"
+        [location]="weatherData()!.location"
+      />
+      <app-daily-forecast [forecasts]="weatherData()!.forecasts" />
+    </aside>
+
+    <main class="right-col">
+      <app-hourly-forecast class="top-card" [forecasts]="weatherData()!.forecast_hours" />
+      <app-weather-details [weather]="weatherData()!.now" />
+
+      @if (isChina() && weatherData()!.indexes && weatherData()!.now.aqi) {
+        <app-aqi
+          [aqi]="weatherData()!.now.aqi!"
+          [pm25]="weatherData()!.now.pm25!"
+          [pm10]="weatherData()!.now.pm10!"
+          [o3]="weatherData()!.now.o3!"
+          [no2]="weatherData()!.now.no2!"
+          [so2]="weatherData()!.now.so2!"
+          [co]="weatherData()!.now.co!"
+        />
+        <app-life-indexes [indexes]="weatherData()!.indexes!" />
+      }
+    </main>
+  </div>
+}

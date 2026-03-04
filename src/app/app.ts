@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { WeatherDashboardComponent } from './components/weather-dashboard.component';
+import { WeatherDashboardComponent } from './components/weather-dashboard/weather-dashboard.component';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +8,5 @@ import { WeatherDashboardComponent } from './components/weather-dashboard.compon
   imports: [WeatherDashboardComponent],
 })
 export class App {
-  protected readonly title = signal('angular-demo');
+  protected readonly title = signal('app-root');
 }
