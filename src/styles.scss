@@ -13,19 +13,9 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Consolas', 'LXGW';
-  /* Allow explicit component overrides for scrollbar by not applying it blindly globally */
   &::-webkit-scrollbar {
     display: none;
     width: 0;
-  }
-}
-
-html,
-body {
-  /* Provide fallback global invisible scrollbar config so page body doesn't trigger scrollbars */
-  &::-webkit-scrollbar {
-    width: 0;
-    display: none;
   }
 }
 
