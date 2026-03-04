@@ -39,9 +39,15 @@ import { IndexData } from '../types/weather';
       gap: 16px;
     }
     .index-item {
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: var(--radius-sm);
+      padding: 16px;
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      border-radius: 16px;
+      transition: all 0.2s ease;
+      &:hover {
+        background: var(--item-bg-hover);
+        transform: translateY(-2px);
+      }
     }
     .header {
       display: flex;

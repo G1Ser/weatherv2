@@ -77,18 +77,60 @@ import { Component, ChangeDetectionStrategy, input } from '@angular/core';
     .pollutants {
       flex: 1;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px 16px;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px 16px;
     }
     .item {
       display: flex;
-      justify-content: space-between;
-      font-size: 0.875rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 0.9rem;
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
+      padding: 14px 16px;
+      border-radius: 16px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--item-bg-hover);
+      }
       span:first-child {
         color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
       span:last-child {
-        font-weight: 500;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: var(--text-color);
+      }
+    }
+
+    /* ---- Mobile Responsive AQI ---- */
+    @media (max-width: 600px) {
+      .aqi-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .pollutants {
+        width: 100%;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px 12px;
+      }
+      .item {
+        padding: 10px 12px;
+      }
+      .item span:last-child {
+        font-size: 1.05rem;
+      }
+    }
+    @media (max-width: 400px) {
+      .pollutants {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   `,

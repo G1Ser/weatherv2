@@ -47,8 +47,11 @@ import { CurrentWeather, WeatherLocation } from '../types/weather';
     :host {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       padding: 24px;
       gap: 16px;
+      height: 100%;
+      box-sizing: border-box;
     }
     .top {
       display: flex;

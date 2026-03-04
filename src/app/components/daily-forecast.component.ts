@@ -47,7 +47,7 @@ import { ForecastDaily } from '../types/weather';
       align-items: center;
       justify-content: space-between;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--item-border);
       &:last-child {
         border-bottom: none;
       }
@@ -73,7 +73,11 @@ import { ForecastDaily } from '../types/weather';
       .bar {
         height: 6px;
         flex: 1;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+        background: linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--text-color) 10%, transparent),
+          color-mix(in srgb, var(--text-color) 40%, transparent)
+        );
         border-radius: 4px;
       }
       .high {

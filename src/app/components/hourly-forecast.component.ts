@@ -23,13 +23,16 @@ import { ForecastHourly } from '../types/weather';
   `,
   styles: `
     :host {
-      display: block;
+      display: flex;
+      flex-direction: column;
       padding: 24px;
+      height: 100%;
+      box-sizing: border-box;
     }
     h3 {
       font-size: 1.125rem;
       font-weight: 600;
-      margin: 0 0 16px;
+      margin: 0 0 auto 0; /* Push scroll container to bottom or keep space */
       color: var(--text-muted);
     }
     .scroll-container {

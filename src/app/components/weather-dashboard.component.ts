@@ -76,6 +76,7 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       <div class="grid-layout">
         <aside class="left-col">
           <app-current-weather
+            class="top-card"
             [weather]="weatherData()!.now"
             [location]="weatherData()!.location"
           />
@@ -83,7 +84,7 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
         </aside>
 
         <main class="right-col">
-          <app-hourly-forecast [forecasts]="weatherData()!.forecast_hours" />
+          <app-hourly-forecast class="top-card" [forecasts]="weatherData()!.forecast_hours" />
           <app-weather-details [weather]="weatherData()!.now" />
 
           @if (isChina() && weatherData()!.indexes && weatherData()!.now.aqi) {
@@ -175,15 +176,15 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
       border-radius: 20px;
       padding: 10px 20px;
       flex: 1;
       max-width: 400px;
       transition: var(--transition);
       &:focus-within {
-        background: rgba(255, 255, 255, 0.09);
+        background: var(--item-bg-hover);
         border-color: var(--accent-color);
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); /* Elegant crisp blue shadow */
       }
@@ -215,8 +216,8 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
       border-radius: 20px;
       padding: 8px 16px;
       font-size: 0.95rem;
@@ -225,8 +226,8 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
     }
 
     .fav-heart-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -236,7 +237,7 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--item-bg-hover);
         transform: scale(1.05);
       }
       &.is-fav {
@@ -255,8 +256,8 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
     }
 
     .theme-toggle {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--item-bg);
+      border: 1px solid var(--item-border);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -267,7 +268,7 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       font-size: 1.1rem;
       transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--item-bg-hover);
         transform: scale(1.05);
       }
     }
@@ -300,18 +301,28 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       gap: 24px;
       align-items: start;
     }
+
     .left-col {
       display: flex;
       flex-direction: column;
       gap: 24px;
       position: sticky;
-      top: 24px;
+      top: 154px; /* Navigate safely right below the entire top sticky header combo */
+      height: fit-content;
     }
     .right-col {
       display: flex;
       flex-direction: column;
       gap: 24px;
       min-width: 0;
+    }
+
+    /* ---- 顶部卡片对齐 ---- */
+    @media (min-width: 1025px) {
+      .top-card {
+        height: 240px; /* 强制两张卡片具有一样的死高度 */
+        box-sizing: border-box;
+      }
     }
 
     /* ---- Tablet ---- */
