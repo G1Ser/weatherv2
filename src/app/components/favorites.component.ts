@@ -232,33 +232,34 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
     .city-card {
       flex: 0 0 auto;
       width: 110px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--surface-color);
+      border: 1px solid var(--item-border);
       border-radius: 18px;
       padding: 14px 12px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: var(--transition);
       display: flex;
       flex-direction: column;
       gap: 5px;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--glass-shadow);
 
       &::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
         opacity: 0;
         transition: opacity 0.25s;
         pointer-events: none;
       }
 
       &:hover {
-        border-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--border-hover);
         transform: translateY(-3px);
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        background: var(--surface-hover);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         &::before {
           opacity: 1;
         }
@@ -266,10 +267,10 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
 
       &.active {
         border-color: var(--accent-color);
-        background: rgba(34, 197, 94, 0.12);
+        background: var(--surface-hover);
         box-shadow:
-          0 0 0 1px rgba(34, 197, 94, 0.3),
-          0 8px 24px rgba(34, 197, 94, 0.15);
+          0 0 0 1px rgba(14, 165, 233, 0.3),
+          0 8px 24px rgba(14, 165, 233, 0.15);
         &::before {
           opacity: 1;
         }
@@ -324,7 +325,7 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: linear-gradient(135deg, var(--accent-color), #16a34a);
+      background: var(--fav-btn-gradient);
       border: none;
       border-radius: 50px;
       padding: 12px 18px;
@@ -332,11 +333,11 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
       font-weight: 600;
       font-size: 0.875rem;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
       &:hover {
         transform: scale(1.05);
-        box-shadow: 0 6px 28px rgba(34, 197, 94, 0.5);
+        box-shadow: 0 6px 28px rgba(59, 130, 246, 0.6);
       }
       &:active {
         transform: scale(0.97);
@@ -380,17 +381,17 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
       left: 0;
       right: 0;
       z-index: 300;
-      background: rgba(15, 23, 42, 0.97);
+      background: var(--sheet-bg);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid var(--item-border);
       border-radius: 24px 24px 0 0;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       max-height: 75dvh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.1);
 
       &.open {
         transform: translateY(0);
@@ -406,11 +407,11 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
     .handle-bar {
       width: 40px;
       height: 4px;
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--item-border);
       border-radius: 4px;
       transition: background 0.2s;
       .sheet-handle:hover & {
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(0, 0, 0, 0.15);
       }
     }
 
@@ -428,7 +429,7 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
     .sheet-count {
       font-size: 0.8rem;
       color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.07);
+      background: var(--item-bg);
       padding: 3px 10px;
       border-radius: 20px;
     }
@@ -453,16 +454,17 @@ function getAqiLevel(aqi: number): { label: string; color: string } {
       padding: 14px 16px;
       border-radius: 16px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--transition);
       border: 1px solid transparent;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.07);
-        border-color: rgba(255, 255, 255, 0.1);
+        background: var(--item-bg-hover);
+        border-color: var(--item-border);
       }
       &.active {
-        background: rgba(34, 197, 94, 0.12);
-        border-color: rgba(34, 197, 94, 0.35);
+        background: var(--surface-color);
+        border-color: var(--accent-light);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
       }
     }
     .row-icon {

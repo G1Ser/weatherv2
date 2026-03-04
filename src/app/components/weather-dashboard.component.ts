@@ -36,22 +36,41 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
         <span>加载中...</span>
       </div>
     } @else {
-      <!-- ===== Header ===== -->
-      <header class="dashboard-header">
-        <div class="header-left">
-          <span class="app-logo">🌤️</span>
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="搜索城市..." class="glass-input" id="city-search" />
+      <!-- ===== 固定在顶部的导航区 ===== -->
+      <div class="sticky-top-nav">
+        <!-- ===== Header ===== -->
+        <header class="dashboard-header">
+          <div class="header-left">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input
+                #searchInput
+                type="text"
+                placeholder="搜索城市..."
+                class="glass-input"
+                id="city-search"
+                (keyup.enter)="onSearch(searchInput.value)"
+              />
+            </div>
           </div>
-        </div>
-        <div class="header-right">
-          <span class="location-badge"> 📍 {{ weatherData()!.location.name }} </span>
-        </div>
-      </header>
+          <div class="header-right">
+            <span class="location-badge"> 📍 {{ weatherData()!.location.name }} </span>
+            <button
+              class="fav-heart-btn"
+              [class.is-fav]="isCurrentFav()"
+              (click)="toggleCurrentFav()"
+            >
+              <span class="heart-icon">❤️</span>
+            </button>
+            <button class="theme-toggle" (click)="toggleTheme()">
+              {{ isDarkTheme() ? '🌙' : '☀️' }}
+            </button>
+          </div>
+        </header>
 
-      <!-- ===== 收藏夹（桌面横条 / 移动端底部抽屉） ===== -->
-      <app-favorites [activeId]="activeFavId()" (citySelected)="onFavCitySelected($event)" />
+        <!-- ===== 收藏夹（桌面横条 / 移动端底部抽屉） ===== -->
+        <app-favorites [activeId]="activeFavId()" (citySelected)="onFavCitySelected($event)" />
+      </div>
 
       <!-- ===== 主内容区 ===== -->
       <div class="grid-layout">
@@ -120,6 +139,24 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       }
     }
 
+    /* ---- Sticky Navigation ---- */
+    .sticky-top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      margin: -24px -24px 24px -24px;
+      padding: 24px 24px 0 24px;
+      border-bottom: 1px solid var(--border-color);
+      /* Add mild shadow when sticky */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      transition:
+        background 0.4s ease,
+        border-color 0.4s ease;
+    }
+
     /* ---- Header ---- */
     .dashboard-header {
       display: flex;
@@ -131,34 +168,28 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
     .header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
       flex: 1;
       min-width: 0;
-    }
-    .app-logo {
-      font-size: 1.6rem;
-      flex: 0 0 auto;
-      line-height: 1;
     }
     .search-box {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
-      padding: 6px 14px;
+      padding: 10px 20px;
       flex: 1;
-      max-width: 280px;
+      max-width: 400px;
       transition: var(--transition);
       &:focus-within {
         background: rgba(255, 255, 255, 0.09);
         border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); /* Elegant crisp blue shadow */
       }
     }
     .search-icon {
-      font-size: 0.85rem;
+      font-size: 1rem;
       opacity: 0.5;
       flex: 0 0 auto;
     }
@@ -167,7 +198,7 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       border: none;
       color: var(--text-color);
       outline: none;
-      font-size: 0.875rem;
+      font-size: 1rem;
       width: 100%;
       font-family: inherit;
       &::placeholder {
@@ -177,7 +208,7 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
     .header-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
       flex: 0 0 auto;
     }
     .location-badge {
@@ -187,10 +218,79 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.875rem;
+      padding: 8px 16px;
+      font-size: 0.95rem;
       color: var(--text-muted);
       white-space: nowrap;
+    }
+
+    .fav-heart-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+      }
+      &.is-fav {
+        border-color: rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.1);
+        .heart-icon {
+          filter: grayscale(0%) opacity(1);
+          animation: heartbeat 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+      }
+    }
+    .heart-icon {
+      font-size: 1.1rem;
+      filter: grayscale(100%) opacity(0.5);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: scale(1);
+      }
+      15% {
+        transform: scale(1.3);
+      }
+      30% {
+        transform: scale(1);
+      }
+      45% {
+        transform: scale(1.2);
+      }
+      60% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     /* ---- Grid ---- */
@@ -227,29 +327,43 @@ import { FavoritesComponent, FavoriteCity } from './favorites.component';
     /* ---- Mobile ---- */
     @media (max-width: 768px) {
       :host {
-        padding: 14px 14px 90px; /* 底部留空给 FAB */
+        padding: 16px 16px 90px;
+      }
+      .sticky-top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--bg-color); /* Fallback to solid color to un-trap backdrop-filter bugs */
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        margin: -16px -16px 16px -16px;
+        padding: 16px 16px 10px 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft shadow when sticky on mobile */
       }
       .dashboard-header {
-        gap: 10px;
-        margin-bottom: 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
       }
-      .app-logo {
-        font-size: 1.3rem;
-      }
+      .header-left,
       .search-box {
-        max-width: none; /* 移动端搜索框撑满 */
+        max-width: none;
+        width: 100%;
+      }
+      .header-right {
+        justify-content: space-between;
+        width: 100%;
       }
       .location-badge {
-        padding: 6px 10px;
-        font-size: 0.8rem;
+        padding: 8px 14px;
+        font-size: 0.9rem;
+        flex: 1;
+        justify-content: center;
       }
     }
 
     /* ---- 超小屏 ---- */
     @media (max-width: 420px) {
-      .app-logo {
-        display: none;
-      }
       .location-badge span:first-child {
         display: none;
       } /* 隐藏 📍 图标 */
@@ -261,9 +375,26 @@ export class WeatherDashboardComponent implements OnInit {
   error = signal<string | null>(null);
   activeFavId = signal<string>('');
   isChina = computed(() => this.weatherData()?.location.country === '中国');
+  isCurrentFav = signal<boolean>(false);
+  isDarkTheme = signal<boolean>(false);
 
   ngOnInit() {
+    // Determine the initial theme from the document's structure, or default to false
+    this.isDarkTheme.set(document.documentElement.getAttribute('data-theme') === 'dark');
     this.loadData('CN');
+  }
+
+  toggleTheme() {
+    this.isDarkTheme.update(v => !v);
+    if (this.isDarkTheme()) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }
+
+  toggleCurrentFav() {
+    this.isCurrentFav.update(v => !v);
   }
 
   async loadData(type: 'CN' | 'US') {
@@ -276,6 +407,39 @@ export class WeatherDashboardComponent implements OnInit {
         this.weatherData.set(json.result);
       } else {
         throw new Error('未获取到有效数据');
+      }
+    } catch (e: any) {
+      this.error.set(e.message);
+    }
+  }
+
+  onSearch(query: string) {
+    if (!query.trim()) return;
+    // Mock simple logic: if query contains English letters, use US data, else CN
+    const isEn = /^[a-zA-Z\s]+$/.test(query.trim());
+    const typeToLoad = isEn ? 'US' : 'CN';
+
+    // Simulate updating the location name for the mock data visualization
+    this.loadDataWithMockOverride(typeToLoad, query.trim());
+  }
+
+  private async loadDataWithMockOverride(type: 'CN' | 'US', cityName: string) {
+    this.activeFavId.set(''); // Clear active favorite
+    this.error.set(null);
+    try {
+      const res = await fetch(`/__mock__/${type}.json`);
+      if (!res.ok) throw new Error('网络请求失败');
+      const json = await res.json();
+      if (json.status === 0 && json.result) {
+        const data: WeatherData = {
+          ...json.result,
+          location: {
+            ...json.result.location,
+            name: cityName,
+            city: cityName,
+          },
+        };
+        this.weatherData.set(data);
       }
     } catch (e: any) {
       this.error.set(e.message);
