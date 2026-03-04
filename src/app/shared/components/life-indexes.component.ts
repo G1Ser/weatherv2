@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { IndexData } from '../types/weather';
+import { IndexData } from '@/app/types/weather';
 
 @Component({
   selector: 'app-life-indexes',

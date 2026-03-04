@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { CurrentWeather } from '../types/weather';
+import { CurrentWeather } from '@/app/types/weather';
 
 @Component({
   selector: 'app-weather-details',

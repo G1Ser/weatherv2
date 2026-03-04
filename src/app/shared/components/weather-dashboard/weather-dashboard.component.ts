@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, computed, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WeatherData } from '../../types/weather';
+import { WeatherData } from '@/app/types/weather';
 import { CurrentWeatherComponent } from '../current-weather.component';
 import { DailyForecastComponent } from '../daily-forecast.component';
 import { HourlyForecastComponent } from '../hourly-forecast.component';

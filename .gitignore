@@ -9,3 +9,6 @@
 /.angular/cache
 /coverage
 __screenshots__/
+
+src/environments/environment.dev.ts
+src/environments/environment.prod.ts

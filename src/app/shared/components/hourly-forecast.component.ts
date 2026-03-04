@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { ForecastHourly } from '../types/weather';
+import { ForecastHourly } from '@/app/types/weather';
 
 @Component({
   selector: 'app-hourly-forecast',
