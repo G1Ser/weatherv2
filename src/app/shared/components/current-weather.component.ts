@@ -10,8 +10,7 @@ import { CurrentWeather, WeatherLocation } from '@/app/types/weather';
   },
   template: `
     <div class="top">
-      <h2>{{ location().name }}, {{ location().city }}</h2>
-      <span class="country">{{ location().country }}</span>
+      <h2>{{ location().name }}</h2>
     </div>
     <div class="main">
       <div class="temp-wrapper">

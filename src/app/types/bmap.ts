@@ -1,28 +1,25 @@
-export interface IPData {
-  city: string;
-  countryCode: string;
+﻿export interface IPData {
+  name_zh: string;
   lon: number;
   lat: number;
 }
 
 export interface WeatherNowType {
-  text: string; //天气现象
-  temp: number; //当前温度
-  feels_like: number; //体感温度
-  wind_class: string; //风速
-  wind_dir: string; //风向
-  rh: number; //相对湿度
-  vis: number; //能见度(m)
-  uvi: number; //紫外线指数
-  pressure: number; //大气压(hPa)
-  dpt: number; //露点温度
-  /**
-   * 以下参数为中国大陆特有
-   */
-  aqi?: number; //空气质量指数
-  /**
-   * 污染物浓度(ug/m³)
-   */
+  text: string;
+  temp: number;
+  feels_like: number;
+  wind_class: string;
+  wind_dir: string;
+  rh: number;
+  vis: number;
+  uvi: number;
+  pressure: number;
+  dpt: number;
+  prec_1h?: number;
+  clouds?: number;
+  wind_angle?: number;
+  uptime?: string;
+  aqi?: number;
   pm25?: number;
   pm10?: number;
   no2?: number;
@@ -31,11 +28,10 @@ export interface WeatherNowType {
   co?: number;
 }
 
-// 生活指数数据 仅限中国大陆
 export interface WeatherIndexesType {
-  name: string; //中文名称
-  brief: string; // 概要
-  detail: string; // 详细说明
+  name: string;
+  brief: string;
+  detail: string;
 }
 
 export interface WeatherForecastType {
@@ -43,6 +39,15 @@ export interface WeatherForecastType {
   text_night: string;
   high: number;
   low: number;
+  wc_day?: string;
+  wd_day?: string;
+  wc_night?: string;
+  wd_night?: string;
+  wind_angle_day?: number;
+  wind_angle_night?: number;
+  uvi?: number;
+  pressure?: number;
+  dpt?: number;
   date: string;
   week: string;
 }
@@ -50,12 +55,22 @@ export interface WeatherForecastType {
 export interface WeatherForecastHoursType {
   text: string;
   temp_fc: number;
-  pop: number; // 降水概率
+  pop: number;
+  wind_class?: string;
+  wind_dir?: string;
+  rh?: number;
+  prec_1h?: number;
+  clouds?: number;
+  wind_angle?: number;
+  uvi?: number;
+  pressure?: number;
+  dpt?: number;
   data_time: string;
 }
 
 export interface WeatherData {
   result: {
+    location: { id: string };
     now: WeatherNowType;
     indexes?: WeatherIndexesType[];
     forecasts: WeatherForecastType[];

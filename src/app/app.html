@@ -1,1 +1,19 @@
-<app-weather-dashboard></app-weather-dashboard>
+﻿@if (showIntro()) {
+  <g1-intro-scroll #introRef burn-speed="0.15">
+    <div slot="header" class="g1-intro-scroll--header">项目介绍</div>
+    <div class="g1-intro-scroll--content">
+      <p>基于 Angular + Angular/CLI 构建的天气查询应用</p>
+      <p>支持全球行政区划数据查询</p>
+      <p>通过浏览器定位 API 提升定位精度（用户可选开启）</p>
+      <p>无用户数据采集，数据仅存储于浏览器缓存（30 分钟）</p>
+    </div>
+    <div slot="footer" class="g1-intro-scroll--footer">
+      <button (click)="handleReject()">拒绝</button>
+      <button (click)="handleReceive()">接受</button>
+    </div>
+  </g1-intro-scroll>
+}
+
+@if (showPage()) {
+  <app-weather-dashboard></app-weather-dashboard>
+}

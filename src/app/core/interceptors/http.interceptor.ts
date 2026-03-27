@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
-import { showToast } from '@/lib/g1-components.es';
+import { showToast } from '@/lib/toast';
 import { environment } from '@/environments/environment.dev';
 
 const REQUEST_TIMEOUT = 10000;
