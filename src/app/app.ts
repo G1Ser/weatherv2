@@ -1,5 +1,4 @@
 ﻿import {
-  AfterViewInit,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
@@ -26,16 +25,20 @@ type NavigateStorageType = 'unknown' | 'yes' | 'no';
   imports: [WeatherDashboardComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], //允许写非Angular组件
 })
-export class App implements OnInit, AfterViewInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
   private readonly NAVIGATE_KEY = 'isNavigate';
   private readonly ipStore = inject(IpStoreService);
   private readonly bmapService = inject(BmapService);
+  private introElement?: HTMLElement & IntroScroll;
   private readonly handleIntroBurn = () => {
     this.showPage.set(true);
   };
 
   @ViewChild('introRef')
-  introRef?: ElementRef<HTMLElement & IntroScroll>;
+  set introRef(ref: ElementRef<HTMLElement & IntroScroll>) {
+    this.introElement = ref?.nativeElement;
+    this.introElement?.addEventListener('burn', this.handleIntroBurn);
+  }
 
   protected readonly showIntro = signal(true);
   protected readonly showPage = signal(false);
@@ -57,12 +60,8 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
-    this.introRef?.nativeElement.addEventListener('burn', this.handleIntroBurn);
-  }
-
   ngOnDestroy() {
-    this.introRef?.nativeElement.removeEventListener('burn', this.handleIntroBurn);
+    this.introElement?.removeEventListener('burn', this.handleIntroBurn);
   }
 
   handleReject() {
@@ -77,7 +76,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private destroyScroll() {
-    this.introRef?.nativeElement.ignite();
+    this.introElement?.ignite();
   }
 
   private async loadIntroScroll() {
@@ -90,6 +89,10 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     const { name_zh, lon, lat } = res;
     this.ipStore.updateLocation({ name_zh, lon, lat });
   }
+
+  // private detachIntroBurnListener() {
+  //   this.introElement?.removeEventListener('burn', this.handleIntroBurn);
+  // }
 
   private navigateCurrentLocation() {
     const geolocation = navigator.geolocation;
