@@ -11,4 +11,3 @@
 __screenshots__/
 
 src/environments/environment.dev.ts
-src/environments/environment.prod.ts

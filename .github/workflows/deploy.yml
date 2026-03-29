@@ -28,6 +28,9 @@ jobs:
       - name: 安装依赖
         run: pnpm install
 
+      - name: 生成 environment.dev.ts
+        run: cp src/environments/environment.example.ts src/environments/environment.dev.ts
+
       - name: 构建项目
         run: pnpm build
 
