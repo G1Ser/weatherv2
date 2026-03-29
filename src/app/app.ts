@@ -39,6 +39,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   protected readonly showIntro = signal(true);
   protected readonly showPage = signal(false);
+  protected readonly isIntroScrollLoaded = signal(false);
 
   ngOnInit() {
     const isNavigate = localStorageUtil.get<NavigateStorageType>(this.NAVIGATE_KEY, 'unknown');
@@ -81,6 +82,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   private async loadIntroScroll() {
     await import('@/lib/introScroll');
+    this.isIntroScrollLoaded.set(true);
   }
 
   private async getLocal(longitude?: number, latitude?: number) {

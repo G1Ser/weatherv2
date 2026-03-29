@@ -1,4 +1,4 @@
-﻿@if (showIntro()) {
+﻿@if (isIntroScrollLoaded() && showIntro()) {
   <g1-intro-scroll #introRef burn-speed="0.15">
     <div slot="header" class="g1-intro-scroll--header">项目介绍</div>
     <div class="g1-intro-scroll--content">
