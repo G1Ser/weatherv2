@@ -80,7 +80,7 @@ export class WeatherDashboardComponent implements OnInit {
   readonly weatherIndexes = signal<WeatherIndexesType[]>([]);
   readonly searchResults = signal<SearchData[]>([]);
   readonly isSearching = signal<boolean>(false);
-  readonly isWeatherLoading = signal<boolean>(false);
+  readonly isWeatherLoading = signal<boolean>(true);
   readonly isFav = signal<boolean>(false);
   readonly isDarkTheme = signal<boolean>(false);
   readonly favoriteCities = signal<FavoriteType[]>([]);
@@ -94,7 +94,6 @@ export class WeatherDashboardComponent implements OnInit {
         }
         const { name_zh, lon, lat } = location;
         this.localLocation.set({ name_zh, lon, lat });
-        this.getFavoriteCities();
         this.loadCurrentLocationWeather(lon, lat, name_zh);
       },
       { allowSignalWrites: true },

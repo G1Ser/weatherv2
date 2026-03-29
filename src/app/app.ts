@@ -109,7 +109,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       },
       {
         enableHighAccuracy: true,
-        timeout: 5000,
+        timeout: 20 * 1000,
         maximumAge: 10 * 1000,
       },
     );
