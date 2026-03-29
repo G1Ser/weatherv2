@@ -1,4 +1,4 @@
-﻿<div class="sticky-top-nav">
+<div class="sticky-top-nav">
   <header class="dashboard-header">
     <div class="header-left">
       <div class="search-box">
@@ -7,16 +7,43 @@
           #searchInput
           type="text"
           placeholder="输入城市名"
+          autocomplete="off"
           class="glass-input"
           id="city-search"
-          (keyup.enter)="onSearch(searchInput.value)"
+          (input)="onSearch(searchInput.value)"
         />
       </div>
+
+      @if (isSearching() || searchResults().length > 0) {
+        <div class="search-results">
+          @if (isSearching()) {
+            <div class="search-result-state">搜索中...</div>
+          } @else if (searchResults().length === 0) {
+            <div class="search-result-state">没找到相关城市</div>
+          } @else {
+            @for (item of searchResults(); track item.id) {
+              <button
+                class="search-result-item"
+                type="button"
+                (click)="onSelectSearchResult(item, searchInput)"
+              >
+                {{ item.display_zh }}
+              </button>
+            }
+          }
+        </div>
+      }
     </div>
+
     <div class="header-right">
-      <span class="location-badge"> 📍 {{ weatherData().location.name }} </span>
-      @if (!isCurrentLocation()) {
-        <button class="fav-heart-btn" type="button">
+      <span class="location-badge">📍 {{ weatherNowData()?.name }}</span>
+      @if (localId() !== weatherNowData()?.id) {
+        <button
+          class="fav-heart-btn"
+          type="button"
+          [class.is-fav]="isFav()"
+          (click)="toggleFavorite()"
+        >
           <span class="heart-icon">❤️</span>
         </button>
       }
@@ -25,38 +52,59 @@
       </button>
     </div>
   </header>
-  <!-- <app-favorites
-    [activeId]="activeFavId()"
+  <app-favorites
+    [activeId]="weatherNowData()?.id ?? ''"
     [cities]="favoriteCities()"
-    (citySelected)="onFavCitySelected($event)"
-  /> -->
+    (citySelected)="onFavoriteCitySelected($event)"
+  />
 </div>
 
 <div class="grid-layout">
   <aside class="left-col">
-    <app-current-weather
-      class="top-card"
-      [weather]="weatherData().now"
-      [location]="weatherData().location"
-    />
-    <app-daily-forecast [forecasts]="weatherData().forecasts" />
+    @if (isWeatherLoading()) {
+      <section class="glass-card skeleton-card top-card">
+        <g1-skeleton class="block-skeleton" style="width: 100%; height: 100%" />
+      </section>
+      <section class="glass-card skeleton-card skeleton-medium">
+        <g1-skeleton class="block-skeleton" style="width: 100%; height: 100%" />
+      </section>
+    } @else if (weatherNowData(); as weather) {
+      <app-current-weather class="top-card" [weather]="weather" />
+      <app-daily-forecast [forecasts]="weatherForecast()" />
+    }
   </aside>
 
   <main class="right-col">
-    <app-hourly-forecast class="top-card" [forecasts]="weatherData().forecast_hours" />
-    <app-weather-details [weather]="weatherData().now" />
-
-    @if (weatherData().indexes && weatherData().now.aqi) {
-      <app-aqi
-        [aqi]="weatherData().now.aqi!"
-        [pm25]="weatherData().now.pm25!"
-        [pm10]="weatherData().now.pm10!"
-        [o3]="weatherData().now.o3!"
-        [no2]="weatherData().now.no2!"
-        [so2]="weatherData().now.so2!"
-        [co]="weatherData().now.co!"
-      />
-      <app-life-indexes [indexes]="weatherData().indexes!" />
+    @if (isWeatherLoading()) {
+      <section class="glass-card skeleton-card top-card">
+        <g1-skeleton class="block-skeleton" style="width: 100%; height: 100%" />
+      </section>
+      <section class="glass-card skeleton-card skeleton-medium">
+        <g1-skeleton class="block-skeleton" style="width: 100%; height: 100%" />
+      </section>
+      <section class="glass-card skeleton-card skeleton-medium">
+        <g1-skeleton class="block-skeleton" style="width: 100%; height: 100%" />
+      </section>
+      <section class="glass-card skeleton-card skeleton-medium">
+        <g1-skeleton class="block-skeleton" style="width: 100%; height: 100%" />
+      </section>
+    } @else if (weatherNowData(); as weather) {
+      <app-hourly-forecast class="top-card" [forecasts]="weatherForecastHours()" />
+      <app-weather-details [weather]="weather" />
+      @if (weatherNowData()?.aqi) {
+        <app-aqi
+          [aqi]="weatherNowData()?.aqi!"
+          [pm25]="weatherNowData()?.pm25!"
+          [pm10]="weatherNowData()?.pm10!"
+          [o3]="weatherNowData()?.o3!"
+          [no2]="weatherNowData()?.no2!"
+          [so2]="weatherNowData()?.so2!"
+          [co]="weatherNowData()?.co!"
+        />
+      }
+      @if (weatherIndexes().length > 0) {
+        <app-life-indexes [indexes]="weatherIndexes()" />
+      }
     }
   </main>
 </div>

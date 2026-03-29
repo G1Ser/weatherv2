@@ -3,7 +3,7 @@ import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
 import { showToast } from '@/lib/toast';
 import { environment } from '@/environments/environment.dev';
 
-const REQUEST_TIMEOUT = 10000;
+const REQUEST_TIMEOUT = 20 * 1000;
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const url = req.url.startsWith('http')

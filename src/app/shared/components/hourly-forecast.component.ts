@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { ForecastHourly } from '@/app/types/weather';
+import type { WeatherForecastHoursType } from '@/app/types/bmap';
 
 @Component({
   selector: 'app-hourly-forecast',
@@ -94,7 +94,7 @@ import { ForecastHourly } from '@/app/types/weather';
   `,
 })
 export class HourlyForecastComponent {
-  forecasts = input.required<ForecastHourly[]>();
+  forecasts = input.required<WeatherForecastHoursType[]>();
 
   formatTime(dateTime: string): string {
     return dateTime.split(' ')[1].substring(0, 5);

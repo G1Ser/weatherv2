@@ -1,16 +1,17 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { CurrentWeather, WeatherLocation } from '@/app/types/weather';
+import { Component, ChangeDetectionStrategy, input, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import type { WeatherNowDataType } from '@/app/types/bmap';
 
 @Component({
   selector: 'app-current-weather',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   host: {
     class: 'glass-card current-weather',
   },
   template: `
     <div class="top">
-      <h2>{{ location().name }}</h2>
+      <h2>{{ weather().name }}</h2>
     </div>
     <div class="main">
       <div class="temp-wrapper">
@@ -18,26 +19,7 @@ import { CurrentWeather, WeatherLocation } from '@/app/types/weather';
         <span class="feels-like">体感 {{ weather().feels_like }}&deg;</span>
       </div>
       <div class="condition">
-        <div class="icon">
-          <!-- TODO: Load real icon based on weather().text -->
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.1388 20.1873 10.2017 17.8767 10.0247C17.3888 6.62121 14.4691 4 11 4C7.13401 4 4 7.13401 4 11C2.34315 11 1 12.3431 1 14C1 15.6569 2.34315 17 4 17"
-            />
-            <path d="M12 11V15" />
-            <path d="M16 13V15" />
-            <path d="M8 13V15" />
-          </svg>
-        </div>
+        <g1-svg-icon [name]="weather().icon" size="96" />
         <div class="desc">{{ weather().text }}</div>
       </div>
     </div>
@@ -90,31 +72,14 @@ import { CurrentWeather, WeatherLocation } from '@/app/types/weather';
         flex-direction: column;
         align-items: center;
         gap: 8px;
-        .icon {
-          color: var(--accent-color);
-          animation: float 3s ease-in-out infinite;
-        }
         .desc {
           font-size: 1.25rem;
           font-weight: 500;
         }
       }
     }
-
-    @keyframes float {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-5px);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
   `,
 })
 export class CurrentWeatherComponent {
-  weather = input.required<CurrentWeather>();
-  location = input.required<WeatherLocation>();
+  weather = input.required<WeatherNowDataType>();
 }

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { ForecastDaily } from '@/app/types/weather';
+import type { WeatherForecastType } from '@/app/types/bmap';
 
 @Component({
   selector: 'app-daily-forecast',
@@ -87,5 +87,5 @@ import { ForecastDaily } from '@/app/types/weather';
   `,
 })
 export class DailyForecastComponent {
-  forecasts = input.required<ForecastDaily[]>();
+  forecasts = input.required<WeatherForecastType[]>();
 }

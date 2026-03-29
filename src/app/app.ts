@@ -13,7 +13,6 @@ import { WeatherDashboardComponent } from './shared/components/weather-dashboard
 import { IpStoreService } from './core/store/ip-store.service';
 import { localStorageUtil } from './shared/utils/storage';
 import { BmapService } from '@/api/bmap';
-import '@/lib/introScroll';
 import { showToast } from '@/lib/toast';
 import type { IntroScroll } from '@/lib/introScroll';
 
@@ -46,9 +45,11 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     if (isNavigate !== 'unknown') {
       this.showIntro.set(false);
       this.showPage.set(true);
+    } else {
+      this.loadIntroScroll();
     }
     if (isNavigate === 'no') {
-      void this.getLocal();
+      this.getLocal();
     }
     if (isNavigate === 'yes') {
       this.navigateCurrentLocation();
@@ -65,7 +66,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   handleReject() {
     localStorageUtil.set<NavigateStorageType>(this.NAVIGATE_KEY, 'no');
-    void this.getLocal();
+    this.getLocal();
     this.destroyScroll();
   }
 
@@ -76,6 +77,10 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   private destroyScroll() {
     this.introRef?.nativeElement.ignite();
+  }
+
+  private async loadIntroScroll() {
+    await import('@/lib/introScroll');
   }
 
   private async getLocal(longitude?: number, latitude?: number) {
@@ -95,12 +100,12 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       pos => {
         localStorageUtil.set<NavigateStorageType>(this.NAVIGATE_KEY, 'yes');
         const { latitude, longitude } = pos.coords;
-        void this.getLocal(longitude, latitude);
+        this.getLocal(longitude, latitude);
       },
       err => {
         showToast(`定位失败${err.message}`, 'error');
         localStorageUtil.set<NavigateStorageType>(this.NAVIGATE_KEY, 'no');
-        void this.getLocal();
+        this.getLocal();
       },
       {
         enableHighAccuracy: true,

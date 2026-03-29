@@ -18,7 +18,7 @@ const weatherCategories: Record<string, string[]> = {
 /**
  * @description 根据天气获取对应icon
  * @param weather 天气现象名称
- * @returns 对应的图标名称
+ * @returns 对应的图标名称,默认给sun
  */
 export default function getWeatherIcon(weather: string) {
   for (const [icon, weathers] of Object.entries(weatherCategories)) {

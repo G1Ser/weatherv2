@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "pnpm"
+    "packageManager": "pnpm",
+    "analytics": "13f7cead-7527-4d2b-884b-069d44e1cded"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -30,16 +31,6 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "__mock__",
-                "output": "__mock__"
               }
             ],
             "styles": ["src/styles.scss"]

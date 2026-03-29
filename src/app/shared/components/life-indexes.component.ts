@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { IndexData } from '@/app/types/weather';
+import type { WeatherIndexesType } from '@/app/types/bmap';
 
 @Component({
   selector: 'app-life-indexes',
@@ -79,5 +79,5 @@ import { IndexData } from '@/app/types/weather';
   `,
 })
 export class LifeIndexesComponent {
-  indexes = input.required<IndexData[]>();
+  indexes = input.required<WeatherIndexesType[]>();
 }

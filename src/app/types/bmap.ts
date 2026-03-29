@@ -4,6 +4,11 @@
   lat: number;
 }
 
+export interface SearchData extends IPData {
+  id: number;
+  display_zh: string;
+}
+
 export interface WeatherNowType {
   text: string;
   temp: number;
@@ -26,6 +31,17 @@ export interface WeatherNowType {
   so2?: number;
   o3?: number;
   co?: number;
+}
+
+export interface FavoriteType {
+  lon: number;
+  lat: number;
+  id: string;
+  name: string;
+}
+
+export interface WeatherNowDataType extends WeatherNowType, FavoriteType {
+  icon: string;
 }
 
 export interface WeatherIndexesType {

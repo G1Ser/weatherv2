@@ -1,51 +1,49 @@
-﻿import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { BmapService } from '@/api/bmap';
 import { showToast } from '@/lib/toast';
 import { IpStoreService } from '@/app/core/store/ip-store.service';
-import type { IPData, WeatherData as ApiWeatherData } from '@/app/types/bmap';
-import type { WeatherData } from '@/app/types/weather';
+import type {
+  FavoriteType,
+  IPData,
+  SearchData,
+  WeatherForecastHoursType,
+  WeatherForecastType,
+  WeatherIndexesType,
+  WeatherNowDataType,
+} from '@/app/types/bmap';
 import { CurrentWeatherComponent } from '../current-weather.component';
 import { DailyForecastComponent } from '../daily-forecast.component';
+import { FavoritesComponent } from '../favorites.component';
 import { HourlyForecastComponent } from '../hourly-forecast.component';
 import { WeatherDetailsComponent } from '../weather-details.component';
 import { AqiComponent } from '../aqi.component';
 import { LifeIndexesComponent } from '../life-indexes.component';
-import { FavoritesComponent, FavoriteCity } from '../favorites/favorites.component';
 import { localStorageUtil } from '@/app/shared/utils/storage';
+import getWeatherIcon from '@/app/shared/utils/weather-icon';
+import {
+  Subject,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  from,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
+import '@/lib/skeleton';
 
 type THEME_TYPE = 'dark' | 'light';
-
-const CURRENT_LOCATION_ID = '__current_location__';
-
-const EMPTY_WEATHER_DATA: WeatherData = {
-  location: {
-    country: '',
-    province: '',
-    city: '',
-    name: '',
-    id: '',
-  },
-  now: {
-    text: '',
-    temp: 0,
-    feels_like: 0,
-    rh: 0,
-    wind_class: '',
-    wind_dir: '',
-    prec_1h: 0,
-    clouds: 0,
-    vis: 0,
-    wind_angle: 0,
-    uvi: 0,
-    pressure: 0,
-    dpt: 0,
-    uptime: '',
-  },
-  indexes: [],
-  forecasts: [],
-  forecast_hours: [],
-};
 
 @Component({
   selector: 'app-weather-dashboard',
@@ -60,53 +58,69 @@ const EMPTY_WEATHER_DATA: WeatherData = {
     LifeIndexesComponent,
     FavoritesComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'weather-dashboard' },
   templateUrl: './weather-dashboard.component.html',
   styleUrl: './weather-dashboard.component.scss',
 })
-export class WeatherDashboardComponent {
+export class WeatherDashboardComponent implements OnInit {
   private readonly THEME_KEY = 'theme';
+  private readonly FAVORITE_KEY = 'favorites';
   private readonly bmapService = inject(BmapService);
   private readonly ipStore = inject(IpStoreService);
-  private lastWeatherKey = '';
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly searchKeyword$ = new Subject<string>();
 
-  readonly weatherData = signal<WeatherData>(EMPTY_WEATHER_DATA);
-  readonly activeFavId = signal<string>(CURRENT_LOCATION_ID);
+  readonly localId = signal<string | null>(null);
+  readonly localLocation = signal<IPData>({ name_zh: '', lon: 0, lat: 0 });
+  readonly weatherNowData = signal<WeatherNowDataType | null>(null);
+  readonly weatherForecast = signal<WeatherForecastType[]>([]);
+  readonly weatherForecastHours = signal<WeatherForecastHoursType[]>([]);
+  readonly weatherIndexes = signal<WeatherIndexesType[]>([]);
+  readonly searchResults = signal<SearchData[]>([]);
+  readonly isSearching = signal<boolean>(false);
+  readonly isWeatherLoading = signal<boolean>(false);
+  readonly isFav = signal<boolean>(false);
   readonly isDarkTheme = signal<boolean>(false);
+  readonly favoriteCities = signal<FavoriteType[]>([]);
 
   constructor() {
     effect(
       () => {
         const location = this.ipStore.location();
-        if (location.lon == null || location.lat == null || !location.name_zh) {
+        if (location.lon == null || location.lat == null) {
           return;
         }
-
-        const weatherKey = `${location.lon}:${location.lat}:${location.name_zh}`;
-        if (weatherKey === this.lastWeatherKey) {
-          return;
-        }
-
-        this.lastWeatherKey = weatherKey;
-        this.activeFavId.set(CURRENT_LOCATION_ID);
-        this.weatherData.update(prev => ({
-          ...prev,
-          location: {
-            ...prev.location,
-            name: location.name_zh,
-            city: location.name_zh,
-          },
-        }));
-        void this.loadCurrentLocationWeather({
-          name_zh: location.name_zh,
-          lon: location.lon,
-          lat: location.lat,
-        });
+        const { name_zh, lon, lat } = location;
+        this.localLocation.set({ name_zh, lon, lat });
+        this.getFavoriteCities();
+        this.loadCurrentLocationWeather(lon, lat, name_zh);
       },
       { allowSignalWrites: true },
     );
 
+    this.searchKeyword$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(keyword =>
+          from(this.bmapService.searchLocation(keyword)).pipe(
+            tap(() => this.isSearching.set(false)),
+            catchError(() => {
+              this.isSearching.set(false);
+              return of({ data: [] as SearchData[] });
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(res => {
+        this.searchResults.set(res.data ?? []);
+      });
+  }
+
+  ngOnInit() {
     const savedTheme = localStorageUtil.get<THEME_TYPE>(this.THEME_KEY, 'light');
     if (savedTheme === 'dark') {
       this.isDarkTheme.set(true);
@@ -128,127 +142,99 @@ export class WeatherDashboardComponent {
     }
   }
 
-  isCurrentLocation() {
-    return this.activeFavId() === CURRENT_LOCATION_ID;
-  }
-
-  favoriteCities(): FavoriteCity[] {
-    const data = this.weatherData();
-    if (!data.location.name) {
-      return [];
-    }
-
-    const today = data.forecasts[0];
-    return [
-      {
-        id: CURRENT_LOCATION_ID,
-        name: data.location.name,
-        country: data.location.country,
-        temp: data.now.temp,
-        feels_like: data.now.feels_like,
-        text: data.now.text,
-        icon: '📍',
-        high: today?.high ?? data.now.temp,
-        low: today?.low ?? data.now.temp,
-        aqi: data.now.aqi,
-      },
-    ];
-  }
-
   onSearch(query: string) {
-    if (!query.trim()) {
+    const keyword = query.trim();
+
+    if (!keyword) {
+      this.isSearching.set(false);
+      this.searchResults.set([]);
       return;
     }
 
-    showToast('城市搜索接口还未接入', 'info');
+    this.isSearching.set(true);
+    this.searchKeyword$.next(keyword);
   }
 
-  onFavCitySelected(city: FavoriteCity) {
-    this.activeFavId.set(city.id);
+  toggleFavorite() {
+    const current = this.weatherNowData();
+    if (!current) {
+      return;
+    }
+
+    const favorites = this.getStoredFavorites();
+    const exists = favorites.some(item => item.id === current.id);
+    const nextFavorites = exists
+      ? favorites.filter(item => item.id !== current.id)
+      : [{ id: current.id, name: current.name, lon: current.lon, lat: current.lat }, ...favorites];
+
+    localStorageUtil.set<FavoriteType[]>(this.FAVORITE_KEY, nextFavorites);
+    this.isFav.set(!exists);
+
+    const message = exists ? '已从收藏移除' : '已添加到收藏';
+    showToast(`${current.name}${message}`, 'success');
+    this.getFavoriteCities();
   }
 
-  private async loadCurrentLocationWeather(location: IPData) {
+  getFavoriteCities() {
+    const localId = this.localId();
+    if (!localId) return;
+
+    const localCity: FavoriteType = {
+      id: localId,
+      name: this.localLocation().name_zh,
+      lon: this.localLocation().lon,
+      lat: this.localLocation().lat,
+    };
+
+    const favorites = this.getStoredFavorites().filter(item => item.id !== localId);
+    this.favoriteCities.set([localCity, ...favorites]);
+  }
+
+  async onSelectSearchResult(item: SearchData, input: HTMLInputElement) {
+    await this.loadCurrentLocationWeather(item.lon, item.lat, item.name_zh);
+    input.value = '';
+    this.searchResults.set([]);
+  }
+
+  async onFavoriteCitySelected(city: FavoriteType) {
+    await this.loadCurrentLocationWeather(city.lon, city.lat, city.name);
+  }
+
+  private async loadCurrentLocationWeather(lon: number, lat: number, name: string) {
+    this.isWeatherLoading.set(true);
+
     try {
-      const response = await this.bmapService.getWeather({
-        lon: location.lon,
-        lat: location.lat,
-        country: 'CN',
+      const res = await this.bmapService.getWeather({ lon, lat });
+      const results = res.result;
+      if (!results) return;
+
+      const { location, now, forecasts, forecast_hours, indexes } = results;
+      if (!this.localId()) {
+        this.localId.set(location.id);
+      }
+
+      this.weatherNowData.set({
+        ...now,
+        id: location.id,
+        name,
+        lon,
+        lat,
+        icon: getWeatherIcon(now.text),
       });
 
-      this.weatherData.set(this.mapWeatherData(response, location));
-    } catch (error) {
-      console.error(error);
-      showToast('天气数据加载失败', 'error');
+      const favorites = this.getStoredFavorites();
+      this.isFav.set(favorites.some(item => item.id === location.id));
+      this.getFavoriteCities();
+
+      this.weatherForecast.set(forecasts);
+      this.weatherForecastHours.set(forecast_hours);
+      this.weatherIndexes.set(indexes ?? []);
+    } finally {
+      this.isWeatherLoading.set(false);
     }
   }
 
-  private mapWeatherData(response: ApiWeatherData, location: IPData): WeatherData {
-    const result = response.result;
-
-    return {
-      location: {
-        country: '',
-        province: '',
-        city: location.name_zh,
-        name: location.name_zh,
-        id: result.location.id,
-      },
-      now: {
-        text: result.now.text,
-        temp: result.now.temp,
-        feels_like: result.now.feels_like,
-        rh: result.now.rh,
-        wind_class: result.now.wind_class,
-        wind_dir: result.now.wind_dir,
-        prec_1h: result.now.prec_1h ?? 0,
-        clouds: result.now.clouds ?? 0,
-        vis: result.now.vis,
-        aqi: result.now.aqi,
-        pm25: result.now.pm25,
-        pm10: result.now.pm10,
-        no2: result.now.no2,
-        so2: result.now.so2,
-        o3: result.now.o3,
-        co: result.now.co,
-        wind_angle: result.now.wind_angle ?? 0,
-        uvi: result.now.uvi,
-        pressure: result.now.pressure,
-        dpt: result.now.dpt,
-        uptime: result.now.uptime ?? '',
-      },
-      indexes: result.indexes ?? [],
-      forecasts: result.forecasts.map(forecast => ({
-        text_day: forecast.text_day,
-        text_night: forecast.text_night,
-        high: forecast.high,
-        low: forecast.low,
-        wc_day: forecast.wc_day ?? '',
-        wd_day: forecast.wd_day ?? '',
-        wc_night: forecast.wc_night ?? '',
-        wd_night: forecast.wd_night ?? '',
-        wind_angle_day: forecast.wind_angle_day,
-        wind_angle_night: forecast.wind_angle_night,
-        uvi: forecast.uvi,
-        pressure: forecast.pressure,
-        dpt: forecast.dpt,
-        date: forecast.date,
-        week: forecast.week,
-      })),
-      forecast_hours: result.forecast_hours.map(hour => ({
-        text: hour.text,
-        temp_fc: hour.temp_fc,
-        wind_class: hour.wind_class ?? '',
-        wind_dir: hour.wind_dir ?? '',
-        rh: hour.rh ?? 0,
-        prec_1h: hour.prec_1h ?? 0,
-        clouds: hour.clouds ?? 0,
-        wind_angle: hour.wind_angle ?? 0,
-        pop: hour.pop,
-        uvi: hour.uvi ?? 0,
-        pressure: hour.pressure ?? 0,
-        dpt: hour.dpt ?? 0,
-        data_time: hour.data_time,
-      })),
-    };
+  private getStoredFavorites(): FavoriteType[] {
+    return localStorageUtil.get<FavoriteType[]>(this.FAVORITE_KEY, []);
   }
 }

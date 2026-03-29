@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { CurrentWeather } from '@/app/types/weather';
+import type { WeatherNowDataType } from '@/app/types/bmap';
 
 @Component({
   selector: 'app-weather-details',
@@ -82,5 +82,5 @@ import { CurrentWeather } from '@/app/types/weather';
   `,
 })
 export class WeatherDetailsComponent {
-  weather = input.required<CurrentWeather>();
+  weather = input.required<WeatherNowDataType>();
 }
