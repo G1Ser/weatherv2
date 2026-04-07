@@ -29,35 +29,36 @@
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
-    "node": ">=21.0.0"
+    "node": ">=21.0.0",
+    "pnpm": ">=10"
   },
   "author": "Chauncey",
   "dependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/compiler": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "@angular/forms": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
-    "@angular/router": "^21.2.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "@angular/common": "21.2.0",
+    "@angular/compiler": "21.2.0",
+    "@angular/core": "21.2.0",
+    "@angular/forms": "21.2.0",
+    "@angular/platform-browser": "21.2.0",
+    "@angular/router": "21.2.0",
+    "rxjs": "7.8.2",
+    "tslib": "2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.0",
-    "@angular/cli": "^21.2.0",
-    "@angular/compiler-cli": "^21.2.0",
-    "@commitlint/cli": "^20.4.3",
-    "@commitlint/config-conventional": "^20.4.3",
-    "@eslint/js": "^9.39.3",
-    "angular-eslint": "^21.2.0",
-    "eslint": "^9.39.3",
-    "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "jsdom": "^28.0.0",
-    "lint-staged": "^16.3.2",
-    "prettier": "^3.8.1",
-    "typescript": "~5.9.2",
-    "typescript-eslint": "^8.56.1",
-    "vitest": "^4.0.8"
+    "@angular/build": "21.2.0",
+    "@angular/cli": "21.2.0",
+    "@angular/compiler-cli": "21.2.0",
+    "@commitlint/cli": "20.4.3",
+    "@commitlint/config-conventional": "20.4.3",
+    "@eslint/js": "9.39.3",
+    "angular-eslint": "21.2.0",
+    "eslint": "9.39.3",
+    "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "jsdom": "28.0.0",
+    "lint-staged": "16.3.2",
+    "prettier": "3.8.1",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.56.1",
+    "vitest": "4.0.8"
   }
 }

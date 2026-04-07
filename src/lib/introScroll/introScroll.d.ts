@@ -26,12 +26,17 @@ export declare class IntroScroll extends LitElement {
   /** ignite() 在 Three.js 初始化完成前被调用时的缓冲标志 */
   private _pendingIgnite;
   private ctx;
+  /** 手机端渲染优化 */
+  private mobile;
   /**
    * 轨道控制事件中继处理器。
    * 将插槽内容区域的拖拽 pointerdown 转发给 WebGL canvas，
    * 使 OrbitControls 可在卷轴内容区域正常响应旋转操作。
    */
   private _orbitRelayHandler;
+  private _activeRelayPointerId;
+  private _resizeObserver;
+  private _resizeRaf;
   private canvasContainer;
   private css3dCanvas;
   private slotContainer;

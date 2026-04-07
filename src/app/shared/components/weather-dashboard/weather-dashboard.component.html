@@ -14,7 +14,7 @@
         />
       </div>
 
-      @if (isSearching() || searchResults().length > 0) {
+      @if (searchInput.value) {
         <div class="search-results">
           @if (isSearching()) {
             <div class="search-result-state">搜索中...</div>

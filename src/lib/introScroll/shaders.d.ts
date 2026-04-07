@@ -9,7 +9,10 @@ import { default as Node } from 'three/src/nodes/core/Node.js';
  *
  * @returns 已设置 SRGBColorSpace 的 CanvasTexture，可直接赋给材质
  */
-export declare function createAgedPaperTexture(): CanvasTexture;
+interface PaperTextureOptions {
+  size: number;
+}
+export declare function createAgedPaperTexture(options: PaperTextureOptions): CanvasTexture;
 /**
  * 构建卷轴燃烧效果所需的全部 TSL 节点。
  *
@@ -41,3 +44,4 @@ export declare function buildParticleShaders(): {
   colorNode: Node<'vec3'>;
   positionNode: import('three/webgpu').VarNode<'vec3'>;
 };
+export {};
