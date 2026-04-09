@@ -70,12 +70,11 @@ src/
 │  ├─ components/      # 通用业务组件
 │  ├─ core/            # 核心能力
 │  ├─ utils/           # 工具方法
-│  ├─ types/           # 业务类型定义
-│  └─ ...
+│  └─ types/           # 业务类型定义
 ├─ api/                # 接口封装与请求模型
 ├─ environments/       # 环境配置
 ├─ assets/             # 静态资源（字体、图片等）
-├─ lib/                # 本地可复用库
+├─ lib/                # g1复用库
 └─ styles/             # 全局样式与主题变量
 ```
 

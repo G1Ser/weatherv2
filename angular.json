@@ -19,7 +19,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
+          "builder": "@angular-builders/custom-esbuild:application",
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
@@ -55,7 +55,8 @@
                   "maximumError": "16kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "plugins": ["./scripts/esbuild-plugins.mjs"]
             },
             "development": {
               "optimization": false,
