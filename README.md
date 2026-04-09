@@ -65,17 +65,34 @@
 ## 项目结构
 
 ```
+public/
+├─ svgs/               # 天气图标
+└─ favicon.ico         # 项目图标
+
+scripts/
+├─ build.mjs           # git信息注入
+└─ esbuild-plugins.mjs # esbuild插件
+
 src/
-├─ app/
-│  ├─ components/      # 通用业务组件
-│  ├─ core/            # 核心能力
-│  ├─ utils/           # 工具方法
-│  └─ types/           # 业务类型定义
 ├─ api/                # 接口封装与请求模型
-├─ environments/       # 环境配置
+├─ app/
+│  ├─ core/            # 核心能力
+│  ├─ shared/          # 复用组件和工具函数
+│  ├─ types/           # 业务类型定义
+│  ├─ app.config.ts    # app配置项
+│  └─ app/             # 入口文件
 ├─ assets/             # 静态资源（字体、图片等）
+├─ constant/           # 常量
+├─ environments/       # 环境配置
 ├─ lib/                # g1复用库
-└─ styles/             # 全局样式与主题变量
+├─ styles/             # 全局样式与主题变量
+├─ utils/              # 工具函数
+├─ index.html          # 根文件
+├─ main.ts             # 主函数
+└─ style.scss          # 全局样式
+
+types/
+└─ global.d.ts         # 全局类型
 ```
 
 ## 快速开始
