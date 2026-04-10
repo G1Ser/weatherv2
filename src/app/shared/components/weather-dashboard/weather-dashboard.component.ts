@@ -86,18 +86,15 @@ export class WeatherDashboardComponent implements OnInit {
   readonly favoriteCities = signal<FavoriteType[]>([]);
 
   constructor() {
-    effect(
-      () => {
-        const location = this.ipStore.location();
-        if (location.lon == null || location.lat == null) {
-          return;
-        }
-        const { name_zh, lon, lat } = location;
-        this.localLocation.set({ name_zh, lon, lat });
-        this.loadCurrentLocationWeather(lon, lat, name_zh);
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const location = this.ipStore.location();
+      if (location.lon == null || location.lat == null) {
+        return;
+      }
+      const { name_zh, lon, lat } = location;
+      this.localLocation.set({ name_zh, lon, lat });
+      this.loadCurrentLocationWeather(lon, lat, name_zh);
+    });
 
     this.searchKeyword$
       .pipe(
