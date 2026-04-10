@@ -1,4 +1,4 @@
-﻿# 天气预报项目
+﻿# 天气预报项目(已归档 2026/4/10)
 
 基于 Angular + TypeScript 的百度地图API的天气预报应用。
 
@@ -37,6 +37,7 @@
 - TypeScript
 - SCSS
 - Angular CLI
+- karma
 
 ## 项目规范
 
@@ -86,6 +87,7 @@ src/
 ├─ environments/       # 环境配置
 ├─ lib/                # g1复用库
 ├─ styles/             # 全局样式与主题变量
+├─ tests/              # 单元测试
 ├─ utils/              # 工具函数
 ├─ index.html          # 根文件
 ├─ main.ts             # 主函数
@@ -108,9 +110,11 @@ pnpm dev
 pnpm dev           # 启动开发服务器
 pnpm build         # 生产构建
 pnpm preview       # 本地预览构建产物
+pnpm analyze       # 构建并分析性能
 pnpm lint          # ESLint 检查
 pnpm lint:fix      # ESLint 自动修复
 pnpm format        # Prettier 格式化
 pnpm format:check  # Prettier 检查
 pnpm type-check    # TypeScript 类型检查
+pnpm test          # 单元测试
 ```
